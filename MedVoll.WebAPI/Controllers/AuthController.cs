@@ -1,6 +1,4 @@
 ﻿using MedVoll.Web.Dtos;
-using MedVoll.Web.Models;
-using MedVoll.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,14 +10,10 @@ public class AuthController:ControllerBase
 {
     private readonly UserManager<IdentityUser> userManager;
     private readonly SignInManager<IdentityUser> signInManager;
-    private readonly TokenJWTService tokenJWTService;
-    private readonly IConfiguration configuration;
-    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, TokenJWTService tokenJWTService, IConfiguration configuration)
+    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
-        this.tokenJWTService = tokenJWTService;
-        this.configuration = configuration;
     }
 
     //Endpoints
@@ -45,7 +39,7 @@ public class AuthController:ControllerBase
         }
         await signInManager.SignInAsync(usuario, isPersistent: false);
 
-        return Ok(new {Mensagem="Usuario registrado com sucesso!",Token= tokenJWTService.GerarTokenDeUsuario(usuarioDto)});
+        return Ok("Usuário Criado com sucesso!");
     }
 
     [HttpPost("login")]
@@ -56,7 +50,7 @@ public class AuthController:ControllerBase
         {
             return BadRequest("Falha no login do usuário.");
         }
-        return Ok(new { Mensagem = "Login realizado com sucesso!", Token = tokenJWTService.GerarTokenDeUsuario(usuarioDto) });
+        return Ok("Logado com sucesso!");
     }
 
     [HttpPost("refresh-token/revoke/{email}")]
