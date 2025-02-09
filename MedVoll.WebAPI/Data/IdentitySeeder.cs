@@ -8,7 +8,7 @@ namespace MedVoll.Web.Data
     {
         public static async Task SeedUsersAsync(IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<VollMedUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             // Verifica e cria a função "User", se necessário
             const string userRole = "User";
@@ -27,16 +27,16 @@ namespace MedVoll.Web.Data
                 await roleManager.CreateAsync(new IdentityRole(adminRole));
             }
 
-            VollMedUser? alice = await userManager.FindByEmailAsync("alice@smith.com");
+            IdentityUser? alice = await userManager.FindByEmailAsync("alice@smith.com");
 
             // Adiciona os admins
-            IList<VollMedUser> admins = await userManager.GetUsersInRoleAsync(adminRole);
+            IList<IdentityUser> admins = await userManager.GetUsersInRoleAsync(adminRole);
             if (!admins.Any(a => a.Email == alice.Email))
             {
                 await userManager.AddToRoleAsync(alice, adminRole);
             }
 
-            VollMedUser? bob = await userManager.FindByEmailAsync("bob@smith.com");
+            IdentityUser? bob = await userManager.FindByEmailAsync("bob@smith.com");
 
             //Adiciona claims
             IList<Claim> userClaims = await userManager.GetClaimsAsync(alice);
@@ -48,14 +48,14 @@ namespace MedVoll.Web.Data
             await userManager.RemoveClaimsAsync(bob, userClaims);
             await userManager.AddClaimAsync(bob, new Claim("FullName", "Bob Smith"));
         }
-        private static async Task CreateUserAsync(UserManager<VollMedUser> userManager, string email, string password, string role)
+        private static async Task CreateUserAsync(UserManager<IdentityUser> userManager, string email, string password, string role)
         {
             // Verifica se o usuário já existe
             if (await userManager.FindByEmailAsync(email) != null)
             {
                 return;
             }
-            var user = new VollMedUser
+            var user = new IdentityUser
             {
                 UserName = email,
                 Email = email,

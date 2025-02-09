@@ -10,11 +10,11 @@ namespace MedVoll.Web.Controllers;
 [ApiController]
 public class AuthController:ControllerBase
 {
-    private readonly UserManager<VollMedUser> userManager;
-    private readonly SignInManager<VollMedUser> signInManager;
+    private readonly UserManager<IdentityUser> userManager;
+    private readonly SignInManager<IdentityUser> signInManager;
     private readonly TokenJWTService tokenJWTService;
     private readonly IConfiguration configuration;
-    public AuthController(UserManager<VollMedUser> userManager, SignInManager<VollMedUser> signInManager, TokenJWTService tokenJWTService, IConfiguration configuration)
+    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, TokenJWTService tokenJWTService, IConfiguration configuration)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
@@ -32,7 +32,7 @@ public class AuthController:ControllerBase
             return BadRequest("Usuário já foi registrado na base de dados.");
         }
 
-        var usuario = new VollMedUser
+        var usuario = new IdentityUser
         {
             UserName = usuarioDto.Email,
             Email = usuarioDto.Email, 
@@ -79,9 +79,6 @@ public class AuthController:ControllerBase
         {
             return BadRequest("Usuário não encontrado.");
         }
-
-        // Remove o refresh token do usuário
-        usuario.RefreshToken = null;        
 
         // Atualiza o usuário na base de dados
         await userManager.UpdateAsync(usuario);
