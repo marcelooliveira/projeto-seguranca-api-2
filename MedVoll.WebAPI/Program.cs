@@ -59,25 +59,6 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("Todas", policy =>
-    {
-        policy.AllowAnyOrigin() // Permite todas as origens
-              .AllowAnyMethod() // Permite todos os métodos HTTP
-              .AllowAnyHeader(); // Permite todos os cabeçalhos       
-     });
-
-    // Política restrita para o ambiente de produção
-    options.AddPolicy("OrigensEspecificas", policy =>
-    {
-        policy.WithOrigins("https://www.exemplo.com", "https://app.exemplo.com")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -86,13 +67,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseHttpsRedirection();
-    app.UseCors("Todas");
 }
 else
 {
     app.UseHsts();
     app.UseHttpsRedirection();
-    app.UseCors("OrigensEspecificas");
 }
 
 app.UseAuthentication();
