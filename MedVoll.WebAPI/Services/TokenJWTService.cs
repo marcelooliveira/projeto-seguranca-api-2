@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace MedVoll.Web.Services;
@@ -62,14 +61,5 @@ public class TokenJWTService
             Expiracao = expiracaoInMinutes,
             Autenticado = true
         };
-    }
-
-    public string GerarRefreshToken()
-    {
-        var bytes = new byte[128];
-        using var numeroRandomico = RandomNumberGenerator.Create();
-        numeroRandomico.GetBytes(bytes);
-        var refreshToken = Convert.ToBase64String(bytes);
-        return refreshToken;
     }
 }

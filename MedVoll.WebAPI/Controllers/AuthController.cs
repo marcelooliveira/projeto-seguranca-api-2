@@ -51,23 +51,12 @@ public class AuthController:ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] UsuarioDto usuarioDto)
     {
-        var usuario = await userManager.FindByEmailAsync(usuarioDto.Email!);
-        if (usuario is null)
-        {
-            return BadRequest("usuário não encontrado.");
-        }
-            
-        var refreshToken = tokenJWTService.GerarRefreshToken();
-
         var result = await signInManager.PasswordSignInAsync(usuarioDto.Email!, usuarioDto.Senha!, isPersistent: false, lockoutOnFailure: false);
         if (!result.Succeeded)
         {
             return BadRequest("Falha no login do usuário.");
         }
-        var userTokenDto = tokenJWTService.GerarTokenDeUsuario(usuarioDto);
-        userTokenDto.RefreshToken = refreshToken;
-
-        return Ok(new { Mensagem = "Login realizado com sucesso!", Token = userTokenDto });
+        return Ok(new { Mensagem = "Login realizado com sucesso!", Token = tokenJWTService.GerarTokenDeUsuario(usuarioDto) });
     }
 
     [HttpPost("refresh-token/revoke/{email}")]
