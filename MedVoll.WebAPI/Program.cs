@@ -26,9 +26,6 @@ builder.Services.AddTransient<IConsultaRepository, ConsultaRepository>();
 builder.Services.AddTransient<IMedicoService, MedicoService>();
 builder.Services.AddTransient<IConsultaService, ConsultaService>();
 
-//tokenjwtservice
-builder.Services.AddScoped<TokenJWTService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
