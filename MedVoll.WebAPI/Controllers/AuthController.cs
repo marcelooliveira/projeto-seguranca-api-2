@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MedVoll.Web.Dtos;
+﻿using MedVoll.Web.Dtos;
 using MedVoll.Web.Models;
 using MedVoll.Web.Services;
 using Microsoft.AspNetCore.Identity;
@@ -13,14 +12,12 @@ public class AuthController:ControllerBase
 {
     private readonly UserManager<VollMedUser> userManager;
     private readonly SignInManager<VollMedUser> signInManager;
-    private readonly IValidator<UsuarioDto> validator;
     private readonly TokenJWTService tokenJWTService;
     private readonly IConfiguration configuration;
-    public AuthController(UserManager<VollMedUser> userManager, SignInManager<VollMedUser> signInManager, IValidator<UsuarioDto> validator, TokenJWTService tokenJWTService, IConfiguration configuration)
+    public AuthController(UserManager<VollMedUser> userManager, SignInManager<VollMedUser> signInManager, TokenJWTService tokenJWTService, IConfiguration configuration)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
-        this.validator = validator;
         this.tokenJWTService = tokenJWTService;
         this.configuration = configuration;
     }
@@ -29,16 +26,6 @@ public class AuthController:ControllerBase
     [HttpPost("registrar-usuario")]
     public async Task<IActionResult> RegistrarUsuarioAsync([FromBody] UsuarioDto usuarioDto)
     {
-        var validationResult = await validator.ValidateAsync(usuarioDto);       
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors.GroupBy(x => x.PropertyName)
-              .ToDictionary(
-                g => g.Key,
-                g => g.Select(x => x.ErrorMessage).ToArray()
-              ));
-        }
-
         var usuarioReg = await userManager.FindByEmailAsync(usuarioDto.Email!);
         if (usuarioReg is not null)
         {
@@ -64,15 +51,6 @@ public class AuthController:ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] UsuarioDto usuarioDto)
     {
-        var validationResult = await validator.ValidateAsync(usuarioDto);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors.GroupBy(x => x.PropertyName)
-              .ToDictionary(
-                g => g.Key,
-                g => g.Select(x => x.ErrorMessage).ToArray()
-              ));
-        }
         var usuario = await userManager.FindByEmailAsync(usuarioDto.Email!);
         if (usuario is null)
         {
