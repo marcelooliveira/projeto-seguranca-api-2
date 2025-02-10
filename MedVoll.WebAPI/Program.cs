@@ -34,6 +34,8 @@ builder.Services.AddTransient<IConsultaService, ConsultaService>();
 //tokenjwtservice
 builder.Services.AddScoped<TokenJWTService>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
 builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
