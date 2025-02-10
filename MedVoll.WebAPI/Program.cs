@@ -4,6 +4,7 @@ using MedVoll.Web.Repositories;
 using MedVoll.Web.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddTransient<IConsultaService, ConsultaService>();
 
 //tokenjwtservice
 builder.Services.AddScoped<TokenJWTService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
 var app = builder.Build();
 
