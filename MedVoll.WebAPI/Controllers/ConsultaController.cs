@@ -16,7 +16,7 @@ namespace MedVoll.Web.Controllers
         private readonly IMedicoService _medicoService;
      
 
-        public ConsultaController(SignInManager<IdentityUser> signInManager, IConsultaService consultaService, IMedicoService medicoService)
+        public ConsultaController(IConsultaService consultaService, IMedicoService medicoService)
         {
             _consultaservice = consultaService;
             _medicoService = medicoService;            
